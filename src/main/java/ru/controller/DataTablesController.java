@@ -19,15 +19,17 @@ public class DataTablesController {
     private final MedicineTypeRepository medTypeRepo;
     private final UserRepository userRepo;
     private final UseTypeRepository useTypeRepo;
+    private final SymptomRepository symptomRepo;
 
 
     @Autowired
-    public DataTablesController(MedicineRepository medicineRepo, PathologyRepository pathologyRepo, MedicineTypeRepository medTypeRepo, UserRepository userRepo, UseTypeRepository useTypeRepo) {
+    public DataTablesController(MedicineRepository medicineRepo, PathologyRepository pathologyRepo, MedicineTypeRepository medTypeRepo, UserRepository userRepo, UseTypeRepository useTypeRepo, SymptomRepository symptomRepo) {
         this.medicineRepo = medicineRepo;
         this.pathologyRepo = pathologyRepo;
         this.medTypeRepo = medTypeRepo;
         this.userRepo = userRepo;
         this.useTypeRepo = useTypeRepo;
+        this.symptomRepo = symptomRepo;
     }
 
     @PostMapping("/medicines")
@@ -54,5 +56,8 @@ public class DataTablesController {
     public DataTablesOutput<UseType> useTypes(@Valid @RequestBody DataTablesInput input){
         return useTypeRepo.findAll(input);
     }
-
+    @PostMapping("/symptoms")
+    public DataTablesOutput<Symptom> symptoms(@Valid @RequestBody DataTablesInput input){
+        return symptomRepo.findAll(input);
+    }
 }
