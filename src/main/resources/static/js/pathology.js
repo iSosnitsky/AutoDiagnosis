@@ -69,7 +69,7 @@ $(document).ready(function () {
             {label: 'Симптомы', name: 'symptoms', type: 'selectize', options: [],  opts: {
                     searchField: "label",
                     create: false,
-                    maxItems :1,
+                    maxItems :10,
                     load: function (query, callback) {
                         $.get(`api/symptoms/search/findTop10ByNameContaining?name=${query}`,
 
@@ -163,7 +163,7 @@ $(document).ready(function () {
             },
             {
                 "name": "symptoms",
-                "data": "symptoms",
+                "data": "symptoms[, ].name",
                 title: "Симптомы",
                 defaultContent: "",
                 searchable: false,

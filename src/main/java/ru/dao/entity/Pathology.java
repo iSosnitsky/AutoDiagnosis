@@ -34,9 +34,9 @@ public class Pathology {
     private String description;
 
 
-    @JsonIgnore
+
     @JsonView(DataTablesOutput.View.class)
-    @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToMany(fetch = FetchType.EAGER,cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
     @JoinTable(
             name = "pathology_to_symptoms",
             joinColumns = { @JoinColumn(name = "pathology_id") },
@@ -47,9 +47,9 @@ public class Pathology {
     private Set<Symptom> symptoms = new HashSet<>();
 
 
-    @JsonIgnore
+
     @JsonView(DataTablesOutput.View.class)
-    @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToMany(fetch = FetchType.EAGER,cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
     @JoinTable(
             name = "pathology_to_medicine",
             joinColumns = { @JoinColumn(name = "pathology_id") },
