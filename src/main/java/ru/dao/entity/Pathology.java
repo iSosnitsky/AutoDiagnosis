@@ -35,6 +35,7 @@ public class Pathology {
 
 
     @JsonIgnore
+    @JsonView(DataTablesOutput.View.class)
     @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
     @JoinTable(
             name = "pathology_to_symptoms",
@@ -47,6 +48,7 @@ public class Pathology {
 
 
     @JsonIgnore
+    @JsonView(DataTablesOutput.View.class)
     @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
     @JoinTable(
             name = "pathology_to_medicine",

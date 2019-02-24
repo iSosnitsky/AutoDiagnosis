@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
                 .failureUrl("/login-error")
-                .defaultSuccessUrl("/api", false)
+                .defaultSuccessUrl("/main", true)
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

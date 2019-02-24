@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+    <title>main</title>
+    <link rel="stylesheet" th:href="@{login/css/style.css}"/>
+    <th:block th:include="fragments/header :: styling"></th:block>
+    <th:block th:include="fragments/header :: scripts-no-const"></th:block>
+    <script src="js/medicine.js" type="text/javascript"></script>
+    <script src="js/medicineType.js" type="text/javascript"></script>
+    <script src="js/pathology.js" type="text/javascript"></script>
+    <script src="js/symptom.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="container">
+    <div id="menu">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li id="tab-medicine" class="nav-item">
+                <a class="nav-link active" id="medicine-tab" data-toggle="tab" href="#medicine" role="tab"
+                   aria-controls="Лекарство" aria-selected="true">Лекарство</a>
+            </li>
+            <li id="tab-medicineType" class="nav-item">
+                <a class="nav-link" id="medicineType-tab" data-toggle="tab" href="#medicineType" role="tab"
+                   aria-controls="Тип лекарства" aria-selected="false">Тип лекарства</a>
+            </li>
+            <li id="tab-pathology" class="nav-item">
+                <a class="nav-link" id="pathology-tab" data-toggle="tab" href="#pathology" role="tab"
+                   aria-controls="Паталогия" aria-selected="false">Паталогия</a>
+            </li>
+            <li id="tab-symptoms" class="nav-item">
+                <a class="nav-link" id="symptom-tab" data-toggle="tab" href="#symptoms" role="tab"
+                   aria-controls="Симптомы" aria-selected="false">Симптомы</a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="medicine" role="tabpanel" aria-labelledby="medicine-tab">...
+            <table id="medicineTable" class="table table-bordered table-sm" style="width: 100%"></table>
+        </div>
+        <div class="tab-pane fade" id="medicineType" role="tabpanel" aria-labelledby="medicine-tab">...
+            <table id="medicineTypeTable" class="table table-bordered table-sm" style="width: 100%"></table>
+        </div>
+        <div class="tab-pane fade" id="pathology" role="tabpanel" aria-labelledby="pathology-tab">...
+            <table id="pathologyTable" class="table table-bordered table-sm" style="width: 100%"></table>
+        </div>
+
+        <div class="tab-pane fade" id="symptoms" role="tabpanel" aria-labelledby="symptom-tab">...
+            <table id="symptomsTable" class="table table-bordered table-sm" style="width: 100%"></table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
