@@ -26,24 +26,17 @@ public class Medicine {
     @JsonView(DataTablesOutput.View.class)
     private String name;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "MEDICINE_TYPE_ID")
+    @JoinColumn
     @JsonView(DataTablesOutput.View.class)
     private MedicineType type;
 
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "USE_TYPE_ID")
+    @JoinColumn
     @JsonView(DataTablesOutput.View.class)
     private UseType useType;
 

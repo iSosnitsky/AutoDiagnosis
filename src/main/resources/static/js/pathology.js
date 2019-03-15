@@ -74,15 +74,15 @@ $(document).ready(function () {
                         $.get(`api/symptoms/search/findTop10ByNameContaining?name=${query}`,
 
                             function (data) {
-                                let pointOptions = [];
+                                let symptomsOptions = [];
                                 data._embedded.symptoms.forEach(function (entry) {
 
-                                    pointOptions.push({
+                                   symptomsOptions.push({
                                         "label": entry.name,
                                         "value": entry._links.self.href
                                     });
                                 });
-                                callback(pointOptions);
+                                callback(symptomsOptions);
                             }
                         )
                     },
@@ -173,7 +173,7 @@ $(document).ready(function () {
             },
             {
                 "name": "medicines",
-                "data": "medicines",
+                "data": "medicines[, ].name",
                 title: "Лекарство",
                 defaultContent: "",
                 searchable: false,

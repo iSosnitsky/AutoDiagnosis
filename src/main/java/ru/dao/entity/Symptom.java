@@ -1,6 +1,5 @@
 package ru.dao.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.*;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;

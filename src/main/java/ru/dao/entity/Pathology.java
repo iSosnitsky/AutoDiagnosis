@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor(suppressConstructorProperties = true)
 @NoArgsConstructor
-@Table(name = "med_types")
+@Table(name = "pathologies")
 @EqualsAndHashCode(exclude = {"symptoms","medicines"})
 public class Pathology {
     @Id
