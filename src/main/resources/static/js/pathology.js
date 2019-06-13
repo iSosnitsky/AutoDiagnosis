@@ -181,9 +181,9 @@ $(document).ready(function () {
             }
         ],
         buttons: [
-            {extend: "create", editor: pathologyEditor},
-            {extend: "edit", editor: pathologyEditor},
-            {extend: "remove", editor: pathologyEditor}
+            {extend: "create", text:"Создать", editor: pathologyEditor},
+            {extend: "edit", text:"Изменить", editor: pathologyEditor},
+            {extend: "remove", text:"Удалить", editor: pathologyEditor}
         ]
     });
 

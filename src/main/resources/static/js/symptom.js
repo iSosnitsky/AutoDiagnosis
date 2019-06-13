@@ -117,9 +117,9 @@ $(document).ready(function () {
             {"name": "name", "data": "name", title: "Название"}
         ],
         buttons: [
-            {extend: "create", editor: symptomEditor},
-            {extend: "edit", editor: symptomEditorPatch},
-            {extend: "remove", editor: symptomEditorRemove}
+            {extend: "create", text:"Создать", editor: symptomEditor},
+            {extend: "edit", text:"Изменить", editor: symptomEditorPatch},
+            {extend: "remove", text:"Удалить", editor: symptomEditorRemove}
         ]
 
     });

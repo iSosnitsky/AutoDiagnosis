@@ -186,9 +186,9 @@ $(document).ready(function () {
                         orderable: false
                     }],
             buttons:  [
-                {extend: "create", editor: medicineEditor},
-                {extend: "edit", editor: medicineEditor},
-                {extend: "remove", editor: medicineEditor}
+                {extend: "create", text:"Создать", editor: medicineEditor,},
+                {extend: "edit", text:"Изменить", editor: medicineEditor},
+                {extend: "remove", text:"Удалить", editor: medicineEditor}
             ]
             });
 

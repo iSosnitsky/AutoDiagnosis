@@ -54,6 +54,14 @@ input[type=text], [type=password] {
     font-size: 12px;
 }
 
+.selectize-control.multi{
+    width:100%;
+}
+
+.input-group-text{
+    border: none !important;;
+}
+
 label {
     color: #1c3655;
     font-size: 14px;

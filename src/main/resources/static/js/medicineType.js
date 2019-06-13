@@ -118,9 +118,9 @@
                 {"name": "name", "data": "name", title: "Название"}
             ],
             buttons: [
-                {extend: "create", editor: medicineTypeEditor},
-                {extend: "edit", editor: medicineTypeEditorPatch},
-                 {extend: "remove", editor: medicineTypeEditorRemove}
+                {extend: "create", text:"Создать", editor: medicineTypeEditor},
+                {extend: "edit", text:"Изменить", editor: medicineTypeEditorPatch},
+                 {extend: "remove", text:"Удалить", editor: medicineTypeEditorRemove}
             ]
         });
 

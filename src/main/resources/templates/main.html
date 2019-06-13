@@ -28,7 +28,7 @@
             </li>
             <li id="tab-pathology" class="nav-item">
                 <a class="nav-link" id="pathology-tab" data-toggle="tab" href="#pathology" role="tab"
-                   aria-controls="Паталогия" aria-selected="false">Паталогия</a>
+                   aria-controls="Патология" aria-selected="false">Патология</a>
             </li>
             <li id="tab-symptoms" class="nav-item">
                 <a class="nav-link" id="symptom-tab" data-toggle="tab" href="#symptoms" role="tab"
@@ -45,23 +45,23 @@
         </ul>
     </div>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="medicine" role="tabpanel" aria-labelledby="medicine-tab">...
+        <div class="tab-pane fade show active" id="medicine" role="tabpanel" aria-labelledby="medicine-tab">
             <table id="medicineTable" class="table table-bordered table-sm" style="width: 100%"></table>
         </div>
-        <div class="tab-pane fade" id="medicineType" role="tabpanel" aria-labelledby="medicine-tab">...
+        <div class="tab-pane fade" id="medicineType" role="tabpanel" aria-labelledby="medicine-tab">
             <table id="medicineTypeTable" class="table table-bordered table-sm" style="width: 100%"></table>
         </div>
-        <div class="tab-pane fade" id="pathology" role="tabpanel" aria-labelledby="pathology-tab">...
+        <div class="tab-pane fade" id="pathology" role="tabpanel" aria-labelledby="pathology-tab">
             <table id="pathologyTable" class="table table-bordered table-sm" style="width: 100%"></table>
         </div>
 
-        <div class="tab-pane fade" id="symptoms" role="tabpanel" aria-labelledby="symptom-tab">...
+        <div class="tab-pane fade" id="symptoms" role="tabpanel" aria-labelledby="symptom-tab">
             <table id="symptomsTable" class="table table-bordered table-sm" style="width: 100%"></table>
         </div>
-        <div class="tab-pane fade" id="useTypes" role="tabpanel" aria-labelledby="useType-tab">...
+        <div class="tab-pane fade" id="useTypes" role="tabpanel" aria-labelledby="useType-tab">
             <table id="useTypesTable" class="table table-bordered table-sm" style="width: 100%"></table>
         </div>
-        <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="symptom-tab">...
+        <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="symptom-tab">
             <div class="row">
                 <div class="col-4">
                     <div class="form-group">
@@ -71,9 +71,6 @@
                                 Поиск по симптому
                                 <div class="input-group">
                                     <input id="search-symptoms" >
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-search"></i></span>
-                                    </div>
                                 </div>
                             </label>
                             <a href="#" v-for="pathology1 in pathologies"

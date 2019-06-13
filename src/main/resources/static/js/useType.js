@@ -101,9 +101,9 @@ $(document).ready(function () {
             {"name": "name", "data": "name", title: "Название"}
             ],
         buttons:  [
-            {extend: "create", editor: useTypesEditor},
-            {extend: "edit", editor: useTypesEditor},
-            {extend: "remove", editor: useTypesEditor}
+            {extend: "create", text:"Создать", editor: useTypesEditor},
+            {extend: "edit", text:"Изменить", editor: useTypesEditor},
+            {extend: "remove", text:"Удалить", editor: useTypesEditor}
         ]
     });
 
