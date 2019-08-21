@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job-scheduling-data
+        xmlns="http://www.quartz-scheduler.org/xml/JobSchedulingData"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData
+        http://www.quartz-scheduler.org/xml/job_scheduling_data_2_0.xsd"
+        version="1.8">
+
+    <schedule>
+        <job>
+            <name>KassirImportFeedJob</name>
+            <group>Kassirru</group>
+            <job-class>ru.job.LoadDataJob</job-class>
+            <durability>true</durability>
+            <recover>false</recover>
+            <job-data-map>
+                <!-- Do not use parameters includedSteps and excludedSteps together -->
+                <!--<entry>-->
+                <!--<key>includedSteps</key>-->
+                <!--<value>kassirLoadHallsStep</value>-->
+                <!--</entry>-->
+                <!--<entry>-->
+                <!--<key>excludedSteps</key>-->
+                <!--<value>kassirLoadHallsStep</value>-->
+                <!--</entry>-->
+            </job-data-map>
+        </job>
+                <trigger>
+                    <cron>
+                        <name>SetObjectStateJobTrigger1</name>
+                        <job-name>SetObjectStateJob</job-name>
+                        <job-group>Common</job-group>
+                        <!-- It will run every day -->
+                        <cron-expression>0 * * ? * *</cron-expression>
+                    </cron>
+                </trigger>
+        <!--        <trigger>-->
+        <!--            <cron>-->
+        <!--                <name>SetObjectStateJobTrigger2</name>-->
+        <!--                <job-name>SetObjectStateJob</job-name>-->
+        <!--                <job-group>Common</job-group>-->
+        <!--                &lt;!&ndash; It will run every day &ndash;&gt;-->
+        <!--                <cron-expression>0 25 1 * * ?</cron-expression>-->
+        <!--            </cron>-->
+        <!--        </trigger>-->
+        <!--<trigger>-->
+        <!--<cron>-->
+        <!--<name>SetObjectStateJobTrigger3</name>-->
+        <!--<job-name>SetObjectStateJob</job-name>-->
+        <!--<job-group>Common</job-group>-->
+        <!--&lt;!&ndash; It will run every day &ndash;&gt;-->
+        <!--<cron-expression>0 45 2 * * ?</cron-expression>-->
+        <!--</cron>-->
+        <!--</trigger>-->
+    </schedule>
+</job-scheduling-data>

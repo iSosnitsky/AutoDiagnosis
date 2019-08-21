@@ -16,4 +16,6 @@ spring:
         connection:
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
     open-in-view: true
-    show-sql: true
+    show-sql: false
+auto-diagnosis:
+  quartz-property-file: config/quartz.properties
