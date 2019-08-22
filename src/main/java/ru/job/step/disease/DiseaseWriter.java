@@ -21,13 +21,8 @@ public class DiseaseWriter implements ItemWriter<Pathology> {
     @Override
     public void write(List<? extends Pathology> list) throws Exception {
         list.forEach(pathology -> {
-            try {
-                pathologyRepository.save(pathology);
-                log.info("Pathology {} saved", pathology.getName());
-            } catch (Exception e) {
-                log.error("Unable to save pathology {}", pathology.getName());
-                e.printStackTrace();
-            }
+            pathologyRepository.save(pathology);
+            log.info("Pathology {} saved", pathology.getName());
         });
     }
 }

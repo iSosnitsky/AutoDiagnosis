@@ -624,6 +624,7 @@ public interface Names {
 
     String[] SURNAMES = new String[]{
             "Иванов",
+            "Курбанов",
             "Смирнов",
             "Кузнецов",
             "Попов",

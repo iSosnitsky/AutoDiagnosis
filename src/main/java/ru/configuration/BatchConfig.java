@@ -62,6 +62,7 @@ public class BatchConfig {
     private final PathologyRepository pathologyRepository;
 
     @Bean
+    @StepScope
     public DiseaseReader diseaseReader(){
         return new DiseaseReader(dataService);
     }

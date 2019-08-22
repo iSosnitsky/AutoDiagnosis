@@ -9,16 +9,14 @@ import ru.dao.repository.SymptomRepository;
 import ru.service.DataService;
 
 import javax.swing.text.html.Option;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PatientProcessor implements ItemProcessor<Patient, Patient> {
     private final DataService dataService;
     private final SymptomRepository symptomRepository;
     private final PathologyRepository pathologyRepository;
+    private final Random random = new Random();
 
     public PatientProcessor(DataService dataService, SymptomRepository symptomRepository, PathologyRepository pathologyRepository) {
         this.dataService = dataService;
@@ -41,7 +39,7 @@ public class PatientProcessor implements ItemProcessor<Patient, Patient> {
         patient.setSymptoms(symptoms);
         List<Pathology> possiblePathologies = pathologyRepository.findAllBySymptomIdContaining(new ArrayList<>(symptoms.stream().map(Symptom::getId).collect(Collectors.toList())));
         if (possiblePathologies.size()>=1){
-            patient.setProbablePathology(possiblePathologies.get(0));
+            patient.setProbablePathology(possiblePathologies.get(random.nextInt(possiblePathologies.size())));
         }
         return patient;
     }
