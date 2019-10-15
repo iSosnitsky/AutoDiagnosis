@@ -10,6 +10,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.flow.Flow;
+import org.springframework.batch.core.step.tasklet.TaskletStep;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +34,9 @@ import ru.job.step.disease.DiseaseWriter;
 import ru.job.step.patient.PatientProcessor;
 import ru.job.step.patient.PatientReader;
 import ru.job.step.patient.PatientWriter;
+import ru.job.step.patient.TriageTasklet;
 import ru.service.DataService;
+import ru.service.TriageService;
 
 import java.util.Map;
 
@@ -47,6 +50,7 @@ public class BatchConfig {
     //Step names;
     private final static String CITY_STEP = "loadCityStep";
     private final static String PATIENTS_STEP = "loadPatientsStep";
+    private final static String TRIAGE_STEP = "triageStep";
     private final static String PATIENTS_PARTITION_STEP = "loadPatientsPartitionStep";
     private final static String DISEASES_STEP = "loadDiseasesStep";
 
@@ -60,6 +64,7 @@ public class BatchConfig {
     private final DataService dataService;
     private final SymptomRepository symptomRepository;
     private final PathologyRepository pathologyRepository;
+    private final TriageService triageService;
 
     @Bean
     @StepScope
@@ -98,6 +103,12 @@ public class BatchConfig {
     }
 
     @Bean
+    @StepScope
+    public TriageTasklet triageTasklet(@Value("#{stepExecutionContext[city]}") String city) {
+        return new TriageTasklet(triageService,city);
+    }
+
+    @Bean
     public PatientProcessor patientProcessor(){
         return new PatientProcessor(dataService,symptomRepository,pathologyRepository);
     }
@@ -122,6 +133,7 @@ public class BatchConfig {
         return steps.get(PATIENTS_PARTITION_STEP)
                 .partitioner(PATIENTS_STEP,cityPartitioner())
                 .step(loadPatientsStep())
+                .step(triageStep())
                 .taskExecutor(cityTaskExecutor("city-executor"))
                 .build();
     }
@@ -132,6 +144,13 @@ public class BatchConfig {
                 .reader(patientReader(null))
                 .processor(patientProcessor())
                 .writer(patientWriter())
+                .build();
+    }
+
+    @Bean
+    public TaskletStep triageStep(){
+        return steps.get(TRIAGE_STEP)
+                .tasklet(triageTasklet(null))
                 .build();
     }
 
