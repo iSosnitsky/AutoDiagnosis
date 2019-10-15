@@ -1,6 +1,5 @@
 package ru.configuration;
 
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -11,6 +10,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.core.step.tasklet.TaskletStep;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +42,6 @@ import java.util.Map;
 
 @Configuration
 @EnableBatchProcessing
-@RequiredArgsConstructor
 public class BatchConfig {
     private static final Logger LOG = LoggerFactory.getLogger(LoadDataJob.class);
     private static final String JOB_NAME = "LoadDataJob";
@@ -66,24 +65,46 @@ public class BatchConfig {
     private final PathologyRepository pathologyRepository;
     private final TriageService triageService;
 
+    public BatchConfig(
+            JobBuilderFactory jobs,
+            StepBuilderFactory steps,
+            Environment environment,
+            CityRepository cityRepository,
+            PatientRepository patientRepository,
+            DataService dataService,
+            SymptomRepository symptomRepository,
+            PathologyRepository pathologyRepository,
+            ObjectProvider<TriageService> triageService
+    ) {
+        this.jobs = jobs;
+        this.steps = steps;
+        this.environment = environment;
+        this.cityRepository = cityRepository;
+        this.patientRepository = patientRepository;
+        this.dataService = dataService;
+        this.symptomRepository = symptomRepository;
+        this.pathologyRepository = pathologyRepository;
+        this.triageService = triageService.getIfAvailable();
+    }
+
     @Bean
     @StepScope
-    public DiseaseReader diseaseReader(){
+    public DiseaseReader diseaseReader() {
         return new DiseaseReader(dataService);
     }
 
     @Bean
-    public DiseaseProcessor diseaseProcessor(){
-        return new DiseaseProcessor(symptomRepository,pathologyRepository,dataService);
+    public DiseaseProcessor diseaseProcessor() {
+        return new DiseaseProcessor(symptomRepository, pathologyRepository, dataService);
     }
 
     @Bean
-    public DiseaseWriter diseaseWriter(){
+    public DiseaseWriter diseaseWriter() {
         return new DiseaseWriter(pathologyRepository);
     }
 
     @Bean
-    public Step loadDiseasesStep(){
+    public Step loadDiseasesStep() {
         return steps.get(DISEASES_STEP).<String, Pathology>chunk(20)
                 .reader(diseaseReader())
                 .processor(diseaseProcessor())
@@ -92,33 +113,33 @@ public class BatchConfig {
     }
 
     @Bean
-    public CityPartitioner cityPartitioner(){
+    public CityPartitioner cityPartitioner() {
         return new CityPartitioner(dataService);
     }
 
     @Bean
     @StepScope
-    public PatientReader patientReader(@Value("#{stepExecutionContext[city]}") String city){
-        return new PatientReader(cityRepository,patientRepository, dataService, city);
+    public PatientReader patientReader(@Value("#{stepExecutionContext[city]}") String city) {
+        return new PatientReader(cityRepository, patientRepository, dataService, city);
     }
 
     @Bean
     @StepScope
     public TriageTasklet triageTasklet(@Value("#{stepExecutionContext[city]}") String city) {
-        return new TriageTasklet(triageService,city);
+        return new TriageTasklet(triageService, city);
     }
 
     @Bean
-    public PatientProcessor patientProcessor(){
-        return new PatientProcessor(dataService,symptomRepository,pathologyRepository);
+    public PatientProcessor patientProcessor() {
+        return new PatientProcessor(dataService, symptomRepository, pathologyRepository);
     }
 
     @Bean
-    public PatientWriter patientWriter(){
+    public PatientWriter patientWriter() {
         return new PatientWriter(patientRepository);
     }
 
-    private TaskExecutor cityTaskExecutor(String prefix){
+    private TaskExecutor cityTaskExecutor(String prefix) {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setMaxPoolSize(10);
         taskExecutor.setCorePoolSize(10);
@@ -129,9 +150,9 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step loadPatientsPartitionStep(){
+    public Step loadPatientsPartitionStep() {
         return steps.get(PATIENTS_PARTITION_STEP)
-                .partitioner(PATIENTS_STEP,cityPartitioner())
+                .partitioner(PATIENTS_STEP, cityPartitioner())
                 .step(loadPatientsStep())
                 .step(triageStep())
                 .taskExecutor(cityTaskExecutor("city-executor"))
@@ -139,7 +160,7 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step loadPatientsStep(){
+    public Step loadPatientsStep() {
         return steps.get(PATIENTS_STEP).<Patient, Patient>chunk(20)
                 .reader(patientReader(null))
                 .processor(patientProcessor())
@@ -148,7 +169,7 @@ public class BatchConfig {
     }
 
     @Bean
-    public TaskletStep triageStep(){
+    public TaskletStep triageStep() {
         return steps.get(TRIAGE_STEP)
                 .tasklet(triageTasklet(null))
                 .build();
@@ -156,28 +177,28 @@ public class BatchConfig {
 
     @Bean
     @StepScope
-    public CityReader cityReader(){
-        return new CityReader(dataService,cityRepository);
+    public CityReader cityReader() {
+        return new CityReader(dataService, cityRepository);
     }
 
     @Bean
-    public CityWriter cityWriter(){
+    public CityWriter cityWriter() {
         return new CityWriter(cityRepository);
     }
 
     @Bean
-    public Step loadCitiesStep(){
-        return steps.get(CITY_STEP).<Map<String,String>, Map<String,String>>chunk(20)
+    public Step loadCitiesStep() {
+        return steps.get(CITY_STEP).<Map<String, String>, Map<String, String>>chunk(20)
                 .reader(cityReader())
                 .writer(cityWriter())
                 .build();
     }
 
     @Bean
-    public Job dataStuffJob(){
+    public Job dataStuffJob() {
         Flow flow = new CustomFlowBuilder("dataStuffFlow")
-                .addStep(CITY_STEP,loadCitiesStep())
-                .addStep(DISEASES_STEP,loadDiseasesStep())
+                .addStep(CITY_STEP, loadCitiesStep())
+                .addStep(DISEASES_STEP, loadDiseasesStep())
                 .addStep(PATIENTS_STEP, loadPatientsPartitionStep())
                 .build();
         return jobs.get(JOB_NAME)

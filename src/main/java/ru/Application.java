@@ -24,12 +24,7 @@ public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
-
-//        AbstractApplicationContext context = new ClassPathXmlApplicationContext("job.xml");
         SpringApplication.run(Application.class);
-
-        //Don't remove, otherwise Machine spirit might get angry
-        logger.info("Machine spirit appeased");
     }
 
     @Bean(initMethod = "start",destroyMethod = "stop")
