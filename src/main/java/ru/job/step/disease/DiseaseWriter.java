@@ -20,9 +20,6 @@ public class DiseaseWriter implements ItemWriter<Pathology> {
 
     @Override
     public void write(List<? extends Pathology> list) throws Exception {
-        list.forEach(pathology -> {
-            pathologyRepository.save(pathology);
-            log.info("Pathology {} saved", pathology.getName());
-        });
+        list.forEach(pathologyRepository::save);
     }
 }
