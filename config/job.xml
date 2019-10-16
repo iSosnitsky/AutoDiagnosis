@@ -31,7 +31,7 @@
                         <job-name>LoadDataJob</job-name>
                         <job-group>Common</job-group>
                         <!-- It will run every day -->
-                        <cron-expression>0 * * ? * *</cron-expression>
+                        <cron-expression>0 0 0 ? * * *</cron-expression>
                     </cron>
                 </trigger>
         <!--        <trigger>-->
