@@ -10,7 +10,6 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.flow.Flow;
-import org.springframework.batch.core.step.tasklet.TaskletStep;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,9 +28,9 @@ import ru.job.LoadDataJob;
 import ru.job.step.CityPartitioner;
 import ru.job.step.city.CityReader;
 import ru.job.step.city.CityWriter;
-import ru.job.step.disease.DiseaseProcessor;
-import ru.job.step.disease.DiseaseReader;
-import ru.job.step.disease.DiseaseWriter;
+import ru.job.step.pathology.PathologyProcessor;
+import ru.job.step.pathology.PathologyReader;
+import ru.job.step.pathology.PathologyWriter;
 import ru.job.step.patient.PatientProcessor;
 import ru.job.step.patient.PatientReader;
 import ru.job.step.patient.PatientWriter;
@@ -59,8 +58,6 @@ public class BatchConfig {
     private final JobBuilderFactory jobs;
     private final StepBuilderFactory steps;
 
-    private final Environment environment;
-
     private final CityRepository cityRepository;
     private final PatientRepository patientRepository;
     private final DataService dataService;
@@ -70,26 +67,26 @@ public class BatchConfig {
 
     @Bean
     @StepScope
-    public DiseaseReader diseaseReader(){
-        return new DiseaseReader(dataService);
+    public PathologyReader pathologyReader(){
+        return new PathologyReader(dataService);
     }
 
     @Bean
-    public DiseaseProcessor diseaseProcessor(){
-        return new DiseaseProcessor(symptomRepository,pathologyRepository,dataService);
+    public PathologyProcessor pathologyProcessor(){
+        return new PathologyProcessor(symptomRepository,pathologyRepository,dataService);
     }
 
     @Bean
-    public DiseaseWriter diseaseWriter(){
-        return new DiseaseWriter(pathologyRepository);
+    public PathologyWriter pathologyWriter(){
+        return new PathologyWriter(pathologyRepository);
     }
 
     @Bean
     public Step loadDiseasesStep(){
         return steps.get(DISEASES_STEP).<String, Pathology>chunk(20)
-                .reader(diseaseReader())
-                .processor(diseaseProcessor())
-                .writer(diseaseWriter())
+                .reader(pathologyReader())
+                .processor(pathologyProcessor())
+                .writer(pathologyWriter())
                 .build();
     }
 
