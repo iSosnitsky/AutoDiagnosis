@@ -1,20 +1,17 @@
-package ru.job.step.disease;
+package ru.job.step.pathology;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemWriter;
-import ru.dao.entity.City;
 import ru.dao.entity.Pathology;
-import ru.dao.repository.CityRepository;
 import ru.dao.repository.PathologyRepository;
 
-import java.nio.file.Path;
 import java.util.List;
 
 @Slf4j
-public class DiseaseWriter implements ItemWriter<Pathology> {
+public class PathologyWriter implements ItemWriter<Pathology> {
     private final PathologyRepository pathologyRepository;
 
-    public DiseaseWriter(PathologyRepository pathologyRepository) {
+    public PathologyWriter(PathologyRepository pathologyRepository) {
         this.pathologyRepository = pathologyRepository;
     }
 

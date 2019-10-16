@@ -12,9 +12,9 @@ public interface DataService {
 
     List<Map<String, String>> getNewPatientsForCity(String city);
 
-    List<String> getNewDiseases();
+    List<String> getNewPathologies();
 
-    Set<String> getSymptomsForDisease(String diseaseName);
+    Set<String> getSymptomsForPathology(String diseaseName);
 
     Set<String> getSymptomsForPatient(String patientName);
 }

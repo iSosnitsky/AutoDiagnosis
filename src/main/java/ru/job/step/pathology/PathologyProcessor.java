@@ -1,4 +1,4 @@
-package ru.job.step.disease;
+package ru.job.step.pathology;
 
 import org.springframework.batch.item.ItemProcessor;
 import ru.dao.entity.Pathology;
@@ -7,16 +7,15 @@ import ru.dao.repository.PathologyRepository;
 import ru.dao.repository.SymptomRepository;
 import ru.service.DataService;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DiseaseProcessor implements ItemProcessor<String, Pathology> {
+public class PathologyProcessor implements ItemProcessor<String, Pathology> {
     private final SymptomRepository symptomRepository;
     private final PathologyRepository pathologyRepository;
     private final DataService dataService;
 
-    public DiseaseProcessor(SymptomRepository symptomRepository, PathologyRepository pathologyRepository, DataService dataService) {
+    public PathologyProcessor(SymptomRepository symptomRepository, PathologyRepository pathologyRepository, DataService dataService) {
         this.symptomRepository = symptomRepository;
         this.pathologyRepository = pathologyRepository;
         this.dataService = dataService;
@@ -34,7 +33,7 @@ public class DiseaseProcessor implements ItemProcessor<String, Pathology> {
         if (pathology.getId()!=null){
             pathology.setDescription("This pathology was observed before");
         }
-        Set<String> symptomNames = dataService.getSymptomsForDisease(pathologyName);
+        Set<String> symptomNames = dataService.getSymptomsForPathology(pathologyName);
         Set<Symptom> symptoms = symptomNames.stream()
                 .map(symptomName -> symptomRepository.findFirstByName(symptomName)
                         .orElseGet(()->{
