@@ -14,7 +14,7 @@ public interface DataService {
 
     List<String> getNewPathologies();
 
-    Set<String> getSymptomsForPathology(String diseaseName);
+    Set<String> getSymptomsForPathology(String pathologyName);
 
     Set<String> getSymptomsForPatient(String patientName);
 }

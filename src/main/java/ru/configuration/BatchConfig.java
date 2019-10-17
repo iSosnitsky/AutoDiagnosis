@@ -14,7 +14,6 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import ru.dao.entity.Pathology;
@@ -53,7 +52,7 @@ public class BatchConfig {
     private final static String TRIAGE_STEP = "triageStep";
     private final static String PATIENTS_PARTITION_STEP = "loadPatientsPartitionStep";
     private final static String TRIAGE_PARTITION_STEP = "triagePartitionStep";
-    private final static String DISEASES_STEP = "loadDiseasesStep";
+    private final static String PATHOLOGIES_STEP = "loadPathologiesStep";
 
     private final JobBuilderFactory jobs;
     private final StepBuilderFactory steps;
@@ -82,8 +81,8 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step loadDiseasesStep(){
-        return steps.get(DISEASES_STEP).<String, Pathology>chunk(20)
+    public Step loadPathologiesStep(){
+        return steps.get(PATHOLOGIES_STEP).<String, Pathology>chunk(20)
                 .reader(pathologyReader())
                 .processor(pathologyProcessor())
                 .writer(pathologyWriter())
@@ -184,7 +183,7 @@ public class BatchConfig {
     public Job loadDataJob() {
         Flow flow = new CustomFlowBuilder("dataFlow")
                 .addStep(CITY_STEP, loadCitiesStep())
-                .addStep(DISEASES_STEP, loadDiseasesStep())
+                .addStep(PATHOLOGIES_STEP, loadPathologiesStep())
                 .addStep(PATIENTS_STEP, loadPatientsPartitionStep())
                 .addStep(TRIAGE_STEP, triagePartitionStep())
                 .build();

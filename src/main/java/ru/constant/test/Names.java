@@ -1328,7 +1328,7 @@ public interface Names {
             "Ступор",
     };
 
-    String[] DISEASES = new String[]{
+    String[] PATHOLOGIES = new String[]{
             "Аббревиатоз",
             "Абсанс",
             "Абсцесс",

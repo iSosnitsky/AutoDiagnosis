@@ -51,15 +51,15 @@ public class TestDataService implements DataService {
 
     @Override
     public List<String> getNewPathologies(){
-        Set<String> diseaseList = new HashSet<>();
+        Set<String> pathologyList = new HashSet<>();
         for (int i = 0; i < 10;i++){
-            diseaseList.add(DISEASES[random.nextInt(DISEASES.length)]);
+            pathologyList.add(PATHOLOGIES[random.nextInt(PATHOLOGIES.length)]);
         }
-        return new ArrayList<>(diseaseList);
+        return new ArrayList<>(pathologyList);
     }
 
     @Override
-    public Set<String> getSymptomsForPathology(String diseaseName){
+    public Set<String> getSymptomsForPathology(String pathologyName){
         Set<String> symptomList = new HashSet<>();
         for (int i = 1; i <= random.nextInt(10);i++){
             symptomList.add(SYMPTOMS[random.nextInt(SYMPTOMS.length)]);
