@@ -1,14 +1,11 @@
 package ru.dao.repository;
 
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.dao.entity.Pathology;
-import ru.dao.entity.Symptom;
-
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
 
 public interface PathologyRepository extends DataTablesRepository<Pathology, Integer> {
 //    List<Pathology> findAllBySymptomsContaining(@Param("symptoms") List<Symptom> symptoms);
