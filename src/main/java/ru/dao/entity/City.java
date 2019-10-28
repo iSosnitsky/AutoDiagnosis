@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 @Builder
 @Entity
-@AllArgsConstructor(suppressConstructorProperties = true)
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "cities")
 @EqualsAndHashCode

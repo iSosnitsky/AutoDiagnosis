@@ -13,11 +13,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
+        http                
                 .authorizeRequests()
                 .antMatchers("/").authenticated()
                 .antMatchers("/api").permitAll()
+                .antMatchers("/h2-console").permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -27,7 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login");
+                .logoutSuccessUrl("/login")
+                .and()
+                .csrf().disable();
 
     }
 

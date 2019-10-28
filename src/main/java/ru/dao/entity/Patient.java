@@ -11,7 +11,7 @@ import java.util.Set;
 @Data
 @Builder
 @Entity
-@AllArgsConstructor(suppressConstructorProperties = true)
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "patients")
 @EqualsAndHashCode(exclude = {"city"})
