@@ -8,6 +8,7 @@ import ru.dao.repository.SymptomRepository;
 import ru.service.DataService;
 
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class PathologyProcessor implements ItemProcessor<String, Pathology> {
@@ -26,13 +27,13 @@ public class PathologyProcessor implements ItemProcessor<String, Pathology> {
         Pathology pathology = pathologyRepository.findByName(pathologyName)
                 .orElseGet(() -> {
                     Pathology newPathology = new Pathology();
-                    newPathology.setName(pathologyName);
+                    newPathology.setName(pathologyName);                   
                     newPathology.setDescription("Newly detected pathology.");
                     return newPathology;
                 });
         if (pathology.getId()!=null){
             pathology.setDescription("This pathology was observed before");
-        }
+        }       
         Set<String> symptomNames = dataService.getSymptomsForPathology(pathologyName);
         Set<Symptom> symptoms = symptomNames.stream()
                 .map(symptomName -> symptomRepository.findFirstByName(symptomName)

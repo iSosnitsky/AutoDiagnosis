@@ -1,11 +1,13 @@
 package ru.job.step.pathology;
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 import org.springframework.batch.item.ItemWriter;
 import ru.dao.entity.Pathology;
 import ru.dao.repository.PathologyRepository;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 public class PathologyWriter implements ItemWriter<Pathology> {
@@ -17,6 +19,11 @@ public class PathologyWriter implements ItemWriter<Pathology> {
 
     @Override
     public void write(List<? extends Pathology> list) throws Exception {
-        list.forEach(pathologyRepository::save);
+        list.forEach((item) -> {
+            Integer tempSeverity = ThreadLocalRandom.current().nextInt(0, 11);
+            item.setSeverity(tempSeverity);
+            //log.info(item.toString());
+            pathologyRepository.save(item);
+        });
     }
 }
