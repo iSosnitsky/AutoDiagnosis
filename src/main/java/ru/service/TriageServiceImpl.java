@@ -25,6 +25,7 @@ public class TriageServiceImpl implements TriageService {
 
     @Override
     public Set<String> triageByCity(String cityName) {
+        patientRepository.clearHospitalized();
         patientRepository.percentedByCityName(cityName, PERCENT_TO_HOSPITALIZE).stream()
                 .forEach(p -> {
                     p.setHospitalized(true);
@@ -38,6 +39,7 @@ public class TriageServiceImpl implements TriageService {
 
     @Override
     public Set<String> triage() {
+        patientRepository.clearHospitalized();
         cityRepository.findAll().forEach(c -> {
             patientRepository.percentedByCityName(c.getName(), PERCENT_TO_HOSPITALIZE).stream()
                     .forEach(p -> {

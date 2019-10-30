@@ -18,4 +18,7 @@ public interface PatientRepository extends DataTablesRepository<Patient,Integer>
 
     @Query(value = "select * from patients as p left join cities as c on p.city_id=c.id where c.name = :cityname and p.hospitalized", nativeQuery = true)
     Set<Patient> hospitalizedByCity(@Param("cityname") String cityname);
+
+    @Query(value = "update patients set hospitalized = false", nativeQuery = true)
+    void clearHospitalized();
 }
