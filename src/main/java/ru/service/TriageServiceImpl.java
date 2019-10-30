@@ -1,10 +1,14 @@
 package ru.service;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lombok.extern.java.Log;
+import ru.dao.entity.City;
 import ru.dao.entity.Patient;
 import ru.dao.repository.CityRepository;
 import ru.dao.repository.PatientRepository;
@@ -16,29 +20,33 @@ import static java.lang.Math.round;
 public class TriageServiceImpl implements TriageService {
     private final PatientRepository patientRepository;
     private final CityRepository cityRepository;
+    private final static Integer PERCENT_TO_HOSPITALIZE = 30;
 
 
     @Override
     public Set<String> triageByCity(String cityName) {
-        // System.out.println(cityName);
-        // Optional<City> city = cityRepository.findFirstByName(cityName);
-
-        // if (city.isPresent()) {
-        // log.info("optional success"+city.get());
-        // Set<Patient> allPatients = patientRepository.orderedByCity(city.get());
-        // allPatients.forEach(System.out::print);
-        // }
-        // List<Patient> allPatients = patientRepository.orderedByCityName(cityName);
-        // allPatients.forEach(System.out::print);
-        return new HashSet<>();
+        patientRepository.percentedByCityName(cityName, PERCENT_TO_HOSPITALIZE).stream()
+                .forEach(p -> {
+                    p.setHospitalized(true);
+                    patientRepository.save(p);
+                });
+        return patientRepository.hospitalizedByCity(cityName).stream().map(p -> p.getFullName()
+        // +" "+ p.getCity().getName()+" "
+        // +p.getProbablePathology().getSeverity() + " " + p.getHospitalized()
+        ).collect(Collectors.toSet());
     }
 
     @Override
     public Set<String> triage() {
-        Set<Patient> patients = patientRepository.orderedPatients();
-        long selected = round(patients.size()*0.30);
-        
-        return             
+        cityRepository.findAll().forEach(c -> {
+            patientRepository.percentedByCityName(c.getName(), PERCENT_TO_HOSPITALIZE).stream()
+                    .forEach(p -> {
+                        p.setHospitalized(true);
+                        patientRepository.save(p);
+                    });
+        });
+        return patientRepository.findByHospitalizedTrue().stream().map(p -> p.getFullName())
+                .collect(Collectors.toSet());
     }
 
     @Autowired

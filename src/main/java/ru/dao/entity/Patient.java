@@ -32,6 +32,7 @@ public class Patient {
     private Integer updates = -1;
 
     @Column(nullable = false)    
+    @JsonView(DataTablesOutput.View.class)
     private Boolean hospitalized = false;
 
     @ManyToOne(fetch = FetchType.EAGER)

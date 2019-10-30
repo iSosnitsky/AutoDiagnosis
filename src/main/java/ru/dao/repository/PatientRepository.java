@@ -11,14 +11,11 @@ import java.util.Set;
 
 public interface PatientRepository extends DataTablesRepository<Patient,Integer> {
     Optional<Patient> findByFullNameAndCity(String fullname, City city);
+    Set<Patient> findByHospitalizedTrue();
     
-    @Query("select p from Patient p where p.city.name = :cityname order by p.probablePathology.severity desc")
-    List<Patient> orderedByCityName(@Param("cityname") String cityname);
+    @Query(value = "select * from patients as p left join cities as c on p.city_id=c.id  left join pathologies as pt on  p.probable_pathology_id = pt.id where c.name = :cityname order by ifnull(pt.severity,0) desc fetch first :percent percent rows only", nativeQuery = true)
+    Set<Patient> percentedByCityName(@Param("cityname") String cityname, @Param("percent") Integer percent);
 
-    @Query("select p from Patient p where p.city = :city")
-    Set<Patient> orderedByCity(@Param("city") City city);
-
-    @Query("select p from Patient p order by p.probablePathology.severity desc")
-    Set<Patient> orderedPatients();
-
+    @Query(value = "select * from patients as p left join cities as c on p.city_id=c.id where c.name = :cityname and p.hospitalized", nativeQuery = true)
+    Set<Patient> hospitalizedByCity(@Param("cityname") String cityname);
 }
