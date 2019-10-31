@@ -2,7 +2,8 @@ package triagetest;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,14 +12,11 @@ import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.dao.entity.City;
@@ -26,7 +24,6 @@ import ru.dao.entity.Pathology;
 import ru.dao.entity.Patient;
 import ru.dao.repository.CityRepository;
 import ru.dao.repository.PatientRepository;
-import ru.service.TriageService;
 import ru.service.TriageServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,14 +53,15 @@ public class TriageServiceTest {
                     new Patient(9, "Пациент 9", 0, false, tCity, new HashSet<>(), tPathology),
                     new Patient(10, "Пациент 10", 0, false, tCity, new HashSet<>(), tPathology));
 
-    private Set<String> expected = Set.of("Пациент 1", "Пациент 2", "Пациент 3");
+    @Test
+    @DisplayName("Triage")
+    public void testTriage() {
+        Assertions.assertNotNull(patientRepositoryMock);
+        Assertions.assertNotNull(cityRepositoryMock);
+        Assertions.assertNotNull(triageServiceMock);
 
-
-    @Before
-    public void setupMocks() {
         cities.add(tCity);
         when(cityRepositoryMock.findAll()).thenReturn(cities);
-        when(patientRepositoryMock.percentedByCityName(anyString(), anyInt())).thenReturn(patients);
 
         doAnswer((i) -> {
             return patients.stream().map(p -> {
@@ -72,28 +70,48 @@ public class TriageServiceTest {
             }).collect(Collectors.toSet());
         }).when(patientRepositoryMock).clearAllHospitalized();
 
-        when(patientRepositoryMock.hospitalizedByCity(anyString())).thenReturn(
-                patients.stream().filter(p -> p.getHospitalized()).collect(Collectors.toSet()));
+        long c = java.lang.Math.round(patients.size() * PERCENT_TO_HOSPITALIZE / 100.0);
+
+        when(patientRepositoryMock.percentedByCityName(anyString(), anyInt()))
+                .thenReturn(patients.stream().limit(c).map(p -> {
+                    p.setHospitalized(true);
+                    return p;
+                }).collect(Collectors.toSet()));
 
         when(patientRepositoryMock.findByHospitalizedTrue()).thenReturn(
                 patients.stream().filter(p -> p.getHospitalized()).collect(Collectors.toSet()));
 
+        Set<String> resultTriage = triageServiceMock.triage();
+        Assertions.assertEquals(3, resultTriage.size());
+
     }
 
-
     @Test
-    @DisplayName("Notnull")
-    public void testTriage() {
+    @DisplayName("TriageByCity")
+    public void testTriageByCity() {
         Assertions.assertNotNull(patientRepositoryMock);
         Assertions.assertNotNull(cityRepositoryMock);
         Assertions.assertNotNull(triageServiceMock);
-        List<City> resultCities = cityRepositoryMock.findAll();
-        Assertions.assertEquals(cities, resultCities);
-        Set<Patient> resultPatients =
-                patientRepositoryMock.percentedByCityName("Москва", PERCENT_TO_HOSPITALIZE);
-        Assertions.assertEquals(patients, resultPatients);
-   
+
+        doAnswer((i) -> {
+            return patients.stream().map(p -> {
+                p.setHospitalized(false);
+                return p;
+            }).collect(Collectors.toSet());
+        }).when(patientRepositoryMock).clearByCityNameHospitalized(anyString());
+
+        long c = java.lang.Math.round(patients.size() * PERCENT_TO_HOSPITALIZE / 100.0);
+
+        when(patientRepositoryMock.percentedByCityName(anyString(), anyInt()))
+                .thenReturn(patients.stream().limit(c).map(p -> {
+                    p.setHospitalized(true);
+                    return p;
+                }).collect(Collectors.toSet()));
+
+
+        when(patientRepositoryMock.hospitalizedByCity(anyString())).thenReturn(
+                patients.stream().filter(p -> p.getHospitalized()).collect(Collectors.toSet()));
         Set<String> resultTriage = triageServiceMock.triageByCity("Москва");
-        Assertions.assertEquals(expected, resultTriage);
+        Assertions.assertEquals(3, resultTriage.size());
     }
 }
