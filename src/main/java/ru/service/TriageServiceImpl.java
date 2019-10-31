@@ -25,21 +25,19 @@ public class TriageServiceImpl implements TriageService {
 
     @Override
     public Set<String> triageByCity(String cityName) {
-        patientRepository.clearHospitalized();
+        patientRepository.clearByCityNameHospitalized(cityName);
         patientRepository.percentedByCityName(cityName, PERCENT_TO_HOSPITALIZE).stream()
                 .forEach(p -> {
                     p.setHospitalized(true);
                     patientRepository.save(p);
                 });
-        return patientRepository.hospitalizedByCity(cityName).stream().map(p -> p.getFullName()
-        // +" "+ p.getCity().getName()+" "
-        // +p.getProbablePathology().getSeverity() + " " + p.getHospitalized()
-        ).collect(Collectors.toSet());
+        return patientRepository.hospitalizedByCity(cityName).stream().map(p -> p.getFullName())
+                .collect(Collectors.toSet());
     }
 
     @Override
     public Set<String> triage() {
-        patientRepository.clearHospitalized();
+        patientRepository.clearAllHospitalized();
         cityRepository.findAll().forEach(c -> {
             patientRepository.percentedByCityName(c.getName(), PERCENT_TO_HOSPITALIZE).stream()
                     .forEach(p -> {

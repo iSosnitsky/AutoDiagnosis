@@ -6,3 +6,5 @@
 .classpath
 .factorypath
 .project
+.sts4-cache/classpath-data.json
+sql.txt
