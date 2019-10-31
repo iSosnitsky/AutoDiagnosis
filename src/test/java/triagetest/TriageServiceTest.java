@@ -2,8 +2,7 @@ package triagetest;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -61,9 +60,9 @@ public class TriageServiceTest {
 
 
     @Before
-    public void setupMocks() {    
-        cities.add(tCity); 
-        when(cityRepositoryMock.findAll()).thenReturn(cities);          
+    public void setupMocks() {
+        cities.add(tCity);
+        when(cityRepositoryMock.findAll()).thenReturn(cities);
         when(patientRepositoryMock.percentedByCityName(anyString(), anyInt())).thenReturn(patients);
 
         doAnswer((i) -> {
@@ -72,8 +71,10 @@ public class TriageServiceTest {
                 return p;
             }).collect(Collectors.toSet());
         }).when(patientRepositoryMock).clearAllHospitalized();
-        
-        
+
+        when(patientRepositoryMock.hospitalizedByCity(anyString())).thenReturn(
+                patients.stream().filter(p -> p.getHospitalized()).collect(Collectors.toSet()));
+
         when(patientRepositoryMock.findByHospitalizedTrue()).thenReturn(
                 patients.stream().filter(p -> p.getHospitalized()).collect(Collectors.toSet()));
 
@@ -82,11 +83,17 @@ public class TriageServiceTest {
 
     @Test
     @DisplayName("Notnull")
-    public void testTriage() {    
-        Assertions.assertNotNull(triageServiceMock); 
+    public void testTriage() {
+        Assertions.assertNotNull(patientRepositoryMock);
+        Assertions.assertNotNull(cityRepositoryMock);
+        Assertions.assertNotNull(triageServiceMock);
         List<City> resultCities = cityRepositoryMock.findAll();
         Assertions.assertEquals(cities, resultCities);
-        Set<String> resultTriage = triageServiceMock.triage();          
+        Set<Patient> resultPatients =
+                patientRepositoryMock.percentedByCityName("Москва", PERCENT_TO_HOSPITALIZE);
+        Assertions.assertEquals(patients, resultPatients);
+   
+        Set<String> resultTriage = triageServiceMock.triageByCity("Москва");
         Assertions.assertEquals(expected, resultTriage);
     }
 }
