@@ -13,3 +13,5 @@ Password: sa
 Database: mem
 URL: jdbc:h2:tcp://localhost:9092/mem:db
 ```
+
+Известна проблема с работой проекта на Java 11. Рекомендую использовать 8-ую.
