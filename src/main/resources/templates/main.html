@@ -1,118 +1,56 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-
     <meta charset="UTF-8">
     <title>main</title>
-    <link rel="stylesheet" th:href="@{login/css/style.css}"/>
-    <th:block th:include="fragments/header :: styling"></th:block>
-    <th:block th:include="fragments/header :: scripts-no-const"></th:block>
-    <script src="js/medicine.js" type="text/javascript"></script>
-    <script src="js/medicineType.js" type="text/javascript"></script>
-    <script src="js/pathology.js" type="text/javascript"></script>
-    <script src="js/symptom.js" type="text/javascript"></script>
-    <script src="js/search.js" type="text/javascript"></script>
-    <script src="js/useType.js" type="text/javascript"></script>
+    <script src="/media/jQuery-2.1.4/jquery-2.1.4.js"></script>
+    <script>
+        function getNewReading() {
+            $.get("data/getNewReading", function (data) {
+                console.log(data);
+                $("#getNewReadingOutput").val(JSON.stringify(data));
+            })
+        }
+
+        function getLastReading() {
+            $.get("data/getLastReading", function (data) {
+                console.log(data);
+                $("#getLastReadingOutput").val(JSON.stringify(data));
+            })
+        }
+
+        function getAllReadings() {
+            $.get("data/getAllReadings", function (data) {
+                console.log(data);
+                $("#getAllReadingsOutput").val(JSON.stringify(data));
+            })
+        }
+    </script>
+    <style>
+        textarea {
+            min-width: 800px;
+            min-height: 200px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <div id="menu">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li id="tab-medicine" class="nav-item">
-                <a class="nav-link active" id="medicine-tab" data-toggle="tab" href="#medicine" role="tab"
-                   aria-controls="Лекарство" aria-selected="true">Лекарство</a>
-            </li>
-            <li id="tab-medicineType" class="nav-item">
-                <a class="nav-link" id="medicineType-tab" data-toggle="tab" href="#medicineType" role="tab"
-                   aria-controls="Тип лекарства" aria-selected="false">Тип лекарства</a>
-            </li>
-            <li id="tab-pathology" class="nav-item">
-                <a class="nav-link" id="pathology-tab" data-toggle="tab" href="#pathology" role="tab"
-                   aria-controls="Патология" aria-selected="false">Патология</a>
-            </li>
-            <li id="tab-symptoms" class="nav-item">
-                <a class="nav-link" id="symptom-tab" data-toggle="tab" href="#symptoms" role="tab"
-                   aria-controls="Симптомы" aria-selected="false">Симптомы</a>
-            </li>
-            <li id="tab-useType" class="nav-item">
-                <a class="nav-link" id="useType-tab" data-toggle="tab" href="#useTypes" role="tab"
-                   aria-controls="Примение" aria-selected="false">Применение</a>
-            </li>
-            <li id="tab-search" class="nav-item">
-                <a class="nav-link" id="search-tab" data-toggle="tab" href="#search" role="tab"
-                   aria-controls="Поиск" aria-selected="false">Поиск</a>
-            </li>
-        </ul>
+    <h3>Получить новое значение</h3>
+    <div>
+        <button onclick="getNewReading()">Получить новое значение</button><br>
+        <textarea id="getNewReadingOutput"></textarea>
     </div>
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="medicine" role="tabpanel" aria-labelledby="medicine-tab">
-            <table id="medicineTable" class="table table-bordered table-sm" style="width: 100%"></table>
-        </div>
-        <div class="tab-pane fade" id="medicineType" role="tabpanel" aria-labelledby="medicine-tab">
-            <table id="medicineTypeTable" class="table table-bordered table-sm" style="width: 100%"></table>
-        </div>
-        <div class="tab-pane fade" id="pathology" role="tabpanel" aria-labelledby="pathology-tab">
-            <table id="pathologyTable" class="table table-bordered table-sm" style="width: 100%"></table>
-        </div>
-
-        <div class="tab-pane fade" id="symptoms" role="tabpanel" aria-labelledby="symptom-tab">
-            <table id="symptomsTable" class="table table-bordered table-sm" style="width: 100%"></table>
-        </div>
-        <div class="tab-pane fade" id="useTypes" role="tabpanel" aria-labelledby="useType-tab">
-            <table id="useTypesTable" class="table table-bordered table-sm" style="width: 100%"></table>
-        </div>
-        <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="symptom-tab">
-            <div class="row">
-                <div class="col-4">
-                    <div class="form-group">
-
-                        <div class="list-group">
-                            <label for="search-symptoms">
-                                Поиск по симптому
-                                <div class="input-group">
-                                    <input id="search-symptoms" >
-                                </div>
-                            </label>
-                            <a href="#" v-for="pathology1 in pathologies"
-                               @click="pickPathology(pathology1.id)"
-                               class="list-group-item list-group-item-action grey">
-                                {{pathology1.name}}<br>
-                                <span class="text-muted small">
-                                    {{pathology1.description}}
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4" v-if="pathology">
-                    <h5 >
-                        {{pathology.name}}
-                    </h5>
-                    {{pathology.description}}
-                    <br>
-                    <br>
-                    <h6 v-if="medicines">Лекарства</h6>
-                    <div class="list-group">
-                        <a href="#" v-for="medicine1 in medicines"
-                           @click="pickMedicine(medicine1.id)"
-                           class="list-group-item list-group-item-action grey">
-                            {{medicine1.name}}<br>
-                            <span class="text-muted small">
-                                {{medicine1.description}}
-                            </span>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-4" v-if="medicine">
-                    <h5>{{medicine.name}}</h5>
-                    {{medicine.description}}<br>
-                    <div v-if="medicineType">Тип: {{medicineType.name}}</div>
-                    Средняя стоимость: {{medicine.price}}<br>
-                    Действующее вещество: {{medicine.substanceDescription}}<br>
-                    <div v-if="useType">Тип применения: {{useType.name}}</div>
-                </div>
-            </div>
-        </div>
+    <br>
+    <h3>Получить последнее значение</h3>
+    <div>
+        <button onclick="getLastReading()">Получить последнее значение</button><br>
+        <textarea id="getLastReadingOutput"></textarea>
+    </div>
+    <br>
+    <h3>Получить все значения</h3>
+    <div>
+        <button onclick="getAllReadings()">Получить новое значение</button><br>
+        <textarea id="getAllReadingsOutput"></textarea>
     </div>
 </div>
 </body>

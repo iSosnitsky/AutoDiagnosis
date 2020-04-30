@@ -7,19 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class AuthController {
 
-    @RequestMapping(value = "/main")
+    @RequestMapping(value = "/")
     public String main(){
         return "main";
-    }
-
-    @RequestMapping(value = "/login1")
-    public String login() {
-        return "login";
-    }
-
-    @RequestMapping("/login-error")
-    public String loginError(Model model) {
-        model.addAttribute("loginError", true);
-        return "login";
     }
 }

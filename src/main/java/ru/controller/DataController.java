@@ -1,27 +1,39 @@
 package ru.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.dao.entity.Medicine;
-import ru.dao.repository.MedicineRepository;
+import ru.dao.entity.SensorReading;
+import ru.dao.repository.SensorReadingRepository;
+import ru.service.SensorReadingService;
 
-@RestController("/data")
+import java.util.List;
+
+@RestController
+@RequestMapping("/data")
+@RequiredArgsConstructor
 public class DataController {
 
-    private final MedicineRepository medicineRepository;
+    private final SensorReadingService sensorReadingService;
+    private final SensorReadingRepository sensorReadingRepository;
 
-    @Autowired
-    public DataController(MedicineRepository medicineRepository) {
-        this.medicineRepository = medicineRepository;
+    @GetMapping("getNewReading")
+    public SensorReading getNewSensorReading() {
+        return sensorReadingService.readNewSensorReading();
     }
 
-    @GetMapping("medicine/{medicineId}")
-    public Medicine getFullMedicine(@PathVariable("medicineId") Integer medicineId) {
-        return medicineRepository
-                .findById(medicineId)
-                .orElseThrow(()->new IllegalArgumentException("Медицина с таким ID не найдена"));
+    @GetMapping("getLastReading")
+    public SensorReading getLastSensorReading() {
+        return sensorReadingRepository.findTop1ByIdIsNotNullOrderByIdDesc()
+                .orElse(null);
+    }
+
+    @GetMapping("getAllReadings")
+    public List<SensorReading> getAllSensorReading() {
+        return sensorReadingRepository.findAll();
     }
 
 }
